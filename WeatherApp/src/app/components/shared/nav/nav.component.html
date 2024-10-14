@@ -1,0 +1,18 @@
+<header class="py-8 xl:py-12 text-white sticky z-50 top-0 bg-default">
+    <div class="container mx-auto flex justify-between items-center  ">
+      <h1 class="text-4xl font-semibold">
+        Weatheria
+        <span class="text-accent">,</span>
+      </h1>
+  
+      <div class=" xl:flex items-center gap-8">
+        <!-- Language Toggle Button -->
+        <button 
+          class=" border text-white px-4 py-2 rounded hover:border hover:border-accent-hover" 
+          (click)="toggleLanguage()">
+          {{ currentLanguage }}
+        </button>
+      </div>
+    </div>
+  </header>
+  
