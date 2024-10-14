@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { WeatherData } from '../../models/WeatherData.model';
+import { WeatherService } from '../../services/weather.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,6 +10,16 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
+  cities: WeatherData[] = [];
+  filteredCities: WeatherData[] = [];
+  searchQuery: string = '';
+  allCities: any[] = [];
+
+  constructor(private weatherService: WeatherService) { } 
+   ngOnInit(): void {
+    this.filteredCities = [...this.cities];  
+   }
+    
   
 }
