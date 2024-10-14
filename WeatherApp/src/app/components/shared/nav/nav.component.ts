@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LanguageService } from '../../../services/language.service';
 
 @Component({
   selector: 'app-nav',
@@ -8,11 +9,15 @@ import { Component } from '@angular/core';
   styleUrl: './nav.component.scss'
 })
 export class NavComponent {
-  currentLanguage: string = 'En'; // Default language
+  constructor(private languageService: LanguageService) {}
+
+  get currentLanguage(): string {
+    return this.languageService.getCurrentLanguage();
+  }
 
   toggleLanguage(): void {
-    this.currentLanguage = this.currentLanguage === 'En' ? 'It' : 'En';
-    // Additional logic to change the app language could be added here
-    // For example, using a translation service
+    const newLang = this.currentLanguage === 'en' ? 'it' : 'en';
+    this.languageService.setLanguage(newLang);
   }
-}
+  }
+
