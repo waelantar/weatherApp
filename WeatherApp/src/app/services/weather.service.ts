@@ -53,21 +53,34 @@ export class WeatherService {
     );
   }
 
+  getAllCities(): Observable<any[]> {
+    return this.http.get<any[]>('assets/cities500.json').pipe(
+      catchError(this.handleError)
+    );
+  }
+
   addCityToLocalStorage(city: WeatherData): void {
-    const cities = this.getCitiesFromLocalStorage();
-    cities.push(city);
-    localStorage.setItem(this.citiesKey, JSON.stringify(cities));
+    if (typeof localStorage !== 'undefined') {
+      const cities = this.getCitiesFromLocalStorage();
+      cities.push(city);
+      localStorage.setItem(this.citiesKey, JSON.stringify(cities));
+    }
   }
 
   getCitiesFromLocalStorage(): WeatherData[] {
-    const cities = localStorage.getItem(this.citiesKey);
-    return cities ? JSON.parse(cities) : [];
+    if (typeof localStorage !== 'undefined') {
+      const cities = localStorage.getItem(this.citiesKey);
+      return cities ? JSON.parse(cities) : [];
+    }
+    return [];
   }
 
   removeCityFromLocalStorage(city: WeatherData): void {
-    let cities = this.getCitiesFromLocalStorage();
-    cities = cities.filter(c => c.city !== city.city);
-    localStorage.setItem(this.citiesKey, JSON.stringify(cities));
+    if (typeof localStorage !== 'undefined') {
+      let cities = this.getCitiesFromLocalStorage();
+      cities = cities.filter(c => c.city !== city.city);
+      localStorage.setItem(this.citiesKey, JSON.stringify(cities));
+    }
   }
 
   private handleError(error: any): Observable<never> {

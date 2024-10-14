@@ -1,0 +1,10 @@
+<div class="add-city-container">
+    <input type="text" [(ngModel)]="cityName" (input)="searchCities()" placeholder="Enter city name">
+    @if(searchResults.length > 0){
+      @for (city of searchResults; track city) {
+      <ul >
+        <li  (click)="addCity(city.name)">{{ city.name }}, {{ city.country }}</li>
+      </ul>
+    }}
+    
+  </div>
