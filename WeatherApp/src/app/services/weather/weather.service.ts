@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../enviroments/enviroment';
@@ -13,12 +13,11 @@ import { datesData } from '../../models/datesData.model';
 export class WeatherService {
   private apiKey = environment.apiKey;
   private citiesKey = 'weatherAppCities';
-  private storedCityNames: Set<string> = new Set();
   private allCities: any[] = [];
   private filteredCities: any[] = [];
   private pageSize = 20;
 
-  private citiesSubject = new BehaviorSubject<any[]>([]); // Use BehaviorSubject
+  private citiesSubject = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {
     this.initializeCities();
@@ -29,29 +28,35 @@ export class WeatherService {
     const storedCityNames = new Set(storedCities.map(city => city.city.toLowerCase()));
 
     this.http.get<any[]>('assets/cities500.json').pipe(
-      catchError(this.handleError)
-    ).subscribe(cities => {
-      this.allCities = cities.filter(city => !storedCityNames.has(city.name.toLowerCase()));
-      this.filteredCities = this.allCities;
-      this.citiesSubject.next(this.filteredCities); // Emit the filtered cities
+      catchError(error => this.handleError(error, 'Failed to load cities'))
+    ).subscribe({
+      next: (cities) => {
+        this.allCities = cities.filter(city => !storedCityNames.has(city.name.toLowerCase()));
+        this.filteredCities = this.allCities;
+        this.citiesSubject.next(this.filteredCities);
+      },
+      error: (error) => {
+        console.error('Error initializing cities:', error);
+        // You might want to emit an empty array or show an error message to the user
+        this.citiesSubject.next([]);
+      }
     });
   }
+
   getCurrentWeather(city: string): Observable<WeatherData> {
     const params = new HttpParams()
       .set('q', city)
       .set('appid', this.apiKey)
-      .set('units', 'metric'); // You can change 'metric' to 'imperial' for Fahrenheit
+      .set('units', 'metric');
 
     return this.http.get<any>(API_ENDPOINTS.WEATHER, { params }).pipe(
-      map(response => {
-        return {
-          city: response.name,
-          temperature: response.main.temp,
-          condition: response.weather[0].description,
-          icon: response.weather[0].icon
-        };
-      }),
-      catchError(this.handleError)
+      map(response => ({
+        city: response.name,
+        temperature: response.main.temp,
+        condition: response.weather[0].description,
+        icon: response.weather[0].icon
+      })),
+      catchError(error => this.handleError(error, `Failed to get weather for ${city}`))
     );
   }
 
@@ -72,10 +77,8 @@ export class WeatherService {
   
         response.list.forEach((item: any) => {
           const forecastDate = new Date(item.dt_txt);
-          // Format the date to YYYY-MM-DD for grouping
           const dateKey = forecastDate.toISOString().split('T')[0];
   
-          // Only add if the date is within the next 7 days and not already added
           if (forecastDate >= today && forecastDate < endDate && !dailyForecastMap[dateKey]) {
             dailyForecastMap[dateKey] = {
               date: item.dt_txt,
@@ -89,13 +92,13 @@ export class WeatherService {
         // Return only the values from the map as an array
         return Object.values(dailyForecastMap);
       }),
-      catchError(this.handleError)
+      catchError(error => this.handleError(error, `Failed to get forecast for ${city}`))
     );
   }
   
   
   getAllCities(): Observable<any[]> {  
-    return this.citiesSubject.asObservable(); // Return the BehaviorSubject as an Observable
+    return this.citiesSubject.asObservable(); 
   }
 
  
@@ -104,7 +107,6 @@ export class WeatherService {
     if (typeof localStorage !== 'undefined') {
       const cities = this.getCitiesFromLocalStorage();
       
-      // Check if the city already exists in the array
       const cityExists = cities.some(existingCity => existingCity.city === city.city);
       
       if (!cityExists) {
@@ -130,8 +132,16 @@ export class WeatherService {
     }
   }
 
-  private handleError(error: any): Observable<never> {
-    console.error('An error occurred', error);
-    return throwError('Something went wrong; please try again later.');
+  private handleError(error: HttpErrorResponse, context: string): Observable<never> {
+    let errorMessage = `${context}: `;
+
+    if (error.error instanceof ErrorEvent) {
+      errorMessage += `An error occurred: ${error.error.message}`;
+    } 
+
+    console.error(errorMessage);
+
+    
+    return throwError(() => new Error('Something went wrong; please try again later.'));
   }
 }
