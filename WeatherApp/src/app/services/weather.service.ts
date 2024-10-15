@@ -64,6 +64,7 @@ export class WeatherService {
       const cities = this.getCitiesFromLocalStorage();
       cities.push(city);
       localStorage.setItem(this.citiesKey, JSON.stringify(cities));
+      console.log(localStorage.getItem(this.citiesKey))
     }
   }
 
