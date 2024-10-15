@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../enviroments/enviroment';
-import { API_ENDPOINTS } from '../constants/api-endpoints.constant';
-import { WeatherData } from '../models/WeatherData.model';
+import { environment } from '../../../enviroments/enviroment';
+import { API_ENDPOINTS } from '../../constants/api-endpoints.constant';
+import { WeatherData } from '../../models/WeatherData.model';
 
 @Injectable({
   providedIn: 'root'

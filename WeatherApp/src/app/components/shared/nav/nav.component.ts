@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LanguageService } from '../../../services/language.service';
+import { LanguageService } from '../../../services/language/language.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

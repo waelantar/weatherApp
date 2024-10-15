@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { WeatherService } from '../../services/weather.service';
+import { WeatherService } from '../../../services/weather/weather.service';
 import { AddCityComponent } from './add-city.component';
 import { CommonModule } from '@angular/common';
 

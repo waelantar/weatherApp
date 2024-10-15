@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { WeatherService } from '../../services/weather.service';
+import { WeatherService } from '../../../services/weather/weather.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AddCity } from '../../constants/add-city.constant';
+import { AddCity } from '../../../constants/add-city.constant';
 import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-add-city',

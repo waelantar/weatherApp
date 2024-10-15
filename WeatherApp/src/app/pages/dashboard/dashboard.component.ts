@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { WeatherData } from '../../models/WeatherData.model';
-import { WeatherService } from '../../services/weather.service';
+import { WeatherService } from '../../services/weather/weather.service';
 import { FormsModule } from '@angular/forms';
-import { AddCityComponent } from "../../components/add-city/add-city.component";
+import { AddCityComponent } from "../../components/shared/add-city/add-city.component";
+import { CityCardComponent } from "../../components/city-card/city-card.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [TranslateModule, FormsModule, AddCityComponent],
+  imports: [TranslateModule, FormsModule, AddCityComponent, CityCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -28,24 +29,18 @@ export class DashboardComponent implements OnInit{
     this.weatherService.getCurrentWeather(city).subscribe(data => {
       this.cities.push(data);
       this.weatherService.addCityToLocalStorage(data);
-      this.filterCities();
+      this.cities = this.weatherService.getCitiesFromLocalStorage();
+
     });
   }
 
   removeCity(city: WeatherData) {
     this.cities = this.cities.filter(c => c.city !== city.city);
     this.weatherService.removeCityFromLocalStorage(city);
-    this.filterCities();
+    this.cities = this.weatherService.getCitiesFromLocalStorage();
+
   }
 
-  filterCities() {
-    if (this.searchQuery.trim()) {
-      this.filteredCities = this.cities.filter(city =>
-        city.city.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    } else {
-      this.filteredCities = [...this.cities];
-    }
-  }
+  
   
 }

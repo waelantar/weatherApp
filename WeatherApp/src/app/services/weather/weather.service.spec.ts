@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { WeatherService } from './weather.service';
-import { WeatherData } from '../models/WeatherData.model';
-import { environment } from '../../enviroments/enviroment';
-import { API_ENDPOINTS } from '../constants/api-endpoints.constant';
+import { WeatherService } from '../weather.service';
+import { WeatherData } from '../../models/WeatherData.model';
+import { environment } from '../../../enviroments/enviroment';
+import { API_ENDPOINTS } from '../../constants/api-endpoints.constant';
 
 describe('WeatherService', () => {
   let service: WeatherService;

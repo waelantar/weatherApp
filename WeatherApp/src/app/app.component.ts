@@ -3,7 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { NavComponent } from './components/shared/nav/nav.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { LanguageService } from './services/language.service';
+import { LanguageService } from './services/language/language.service';
 @Component({
   selector: 'app-root',
   standalone: true,
