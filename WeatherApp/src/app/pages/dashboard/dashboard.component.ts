@@ -4,12 +4,12 @@ import { WeatherData } from '../../models/WeatherData.model';
 import { WeatherService } from '../../services/weather/weather.service';
 import { FormsModule } from '@angular/forms';
 import { AddCityComponent } from "../../components/shared/add-city/add-city.component";
-import { CityCardComponent } from "../../components/city-card/city-card.component";
+import { CityCardComponent } from '../../components/city-card/city-card.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [TranslateModule, FormsModule, AddCityComponent, CityCardComponent],
+  imports: [TranslateModule, FormsModule, AddCityComponent,CityCardComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']  // Fix typo here
 })
