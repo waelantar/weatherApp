@@ -1,3 +1,20 @@
 {
-    "SEARCHFORCITY": "cercare città"
+    "SEARCHFORCITY": "cercare città",
+    "clear sky": "cielo sereno",
+    "few clouds": "poche nuvole",
+    "scattered clouds": "nuvole sparse",
+    "broken clouds": "nuvole frastagliate",
+    "shower rain": "pioggia leggera",
+    "rain": "pioggia",
+    "thunderstorm": "temporale",
+    "snow": "neve",
+    "mist": "nebbia",
+    "moderate rain": "pioggia moderata",
+    "Monday": "lunedì",
+    "Tuesday": "martedì",
+    "Wednesday": "mercoledì",
+    "Thursday": "giovedì",
+    "Friday": "venerdì",
+    "Saturday": "sabato",
+    "Sunday": "domenica"
 }

@@ -1,20 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CityCardComponent } from './city-card.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('CityCardComponent', () => {
   let component: CityCardComponent;
   let fixture: ComponentFixture<CityCardComponent>;
   let sanitizerSpy: jasmine.SpyObj<DomSanitizer>;
+  let translateServiceSpy: jasmine.SpyObj<TranslateService>;
 
   beforeEach(async () => {
     // Create a spy object for DomSanitizer
     const spy = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustHtml']);
+    const translateMock = jasmine.createSpyObj('TranslateService', ['instant']);
 
     await TestBed.configureTestingModule({
       imports: [CityCardComponent],
       providers: [
-        { provide: DomSanitizer, useValue: spy }
+        { provide: DomSanitizer, useValue: spy },        { provide: TranslateService, useValue: translateMock }
+
       ]
     }).compileComponents();
 
