@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../enviroments/enviroment';
 import { API_ENDPOINTS } from '../../constants/api-endpoints.constant';
@@ -12,9 +12,29 @@ import { WeatherData } from '../../models/WeatherData.model';
 export class WeatherService {
   private apiKey = environment.apiKey;
   private citiesKey = 'weatherAppCities';
+  private storedCityNames: Set<string> = new Set();
+  private allCities: any[] = [];
+  private filteredCities: any[] = [];
+  private pageSize = 20;
 
-  constructor(private http: HttpClient) { }
+  private citiesSubject = new BehaviorSubject<any[]>([]); // Use BehaviorSubject
 
+  constructor(private http: HttpClient) {
+    this.initializeCities();
+  }
+
+  private initializeCities(): void {
+    const storedCities = this.getCitiesFromLocalStorage();
+    const storedCityNames = new Set(storedCities.map(city => city.city.toLowerCase()));
+
+    this.http.get<any[]>('assets/cities500.json').pipe(
+      catchError(this.handleError)
+    ).subscribe(cities => {
+      this.allCities = cities.filter(city => !storedCityNames.has(city.name.toLowerCase()));
+      this.filteredCities = this.allCities;
+      this.citiesSubject.next(this.filteredCities); // Emit the filtered cities
+    });
+  }
   getCurrentWeather(city: string): Observable<WeatherData> {
     const params = new HttpParams()
       .set('q', city)
@@ -52,19 +72,23 @@ export class WeatherService {
       catchError(this.handleError)
     );
   }
-
-  getAllCities(): Observable<any[]> {
-    return this.http.get<any[]>('assets/cities500.json').pipe(
-      catchError(this.handleError)
-    );
+  getAllCities(): Observable<any[]> {  
+    return this.citiesSubject.asObservable(); // Return the BehaviorSubject as an Observable
   }
+
+ 
 
   addCityToLocalStorage(city: WeatherData): void {
     if (typeof localStorage !== 'undefined') {
       const cities = this.getCitiesFromLocalStorage();
-      cities.push(city);
-      localStorage.setItem(this.citiesKey, JSON.stringify(cities));
-      console.log(localStorage.getItem(this.citiesKey))
+      
+      // Check if the city already exists in the array
+      const cityExists = cities.some(existingCity => existingCity.city === city.city);
+      
+      if (!cityExists) {
+        cities.push(city);
+        localStorage.setItem(this.citiesKey, JSON.stringify(cities));
+      }
     }
   }
 
