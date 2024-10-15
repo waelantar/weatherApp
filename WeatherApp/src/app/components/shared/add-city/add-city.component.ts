@@ -23,7 +23,6 @@ export class AddCityComponent implements OnInit{
   ngOnInit(): void {
     this.weatherService.getAllCities().subscribe(data => {
       this.allCities = data;
-      console.log(data);
     });
   }
 

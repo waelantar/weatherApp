@@ -22,3 +22,12 @@
       -webkit-text-stroke: 1px #e63946;
     }
   }
+  @layer utilities {
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  }
