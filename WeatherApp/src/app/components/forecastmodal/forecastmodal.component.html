@@ -1,9 +1,40 @@
-<div class="modal">
-    <button (click)="close.emit()">Close</button>
-    @for (day of forecastData; track day) {
-    <div>
-      <p>{{day.date}}</p>
-      <p>{{ day.temperature }}°C - {{ day.condition }}</p>
-      <img [src]="'http://openweathermap.org/img/wn/' + day.icon + '@2x.png'" alt="Weather icon">
-    </div>}
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
+    <div class="bg-[#070450] text-white p-4 flex justify-between items-center">
+      <h2 class="text-xl font-semibold">Weather Forecast</h2>
+      <button (click)="close.emit()" class="text-black hover:text-gray-300 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="p-4 max-h-[70vh] overflow-y-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="p-2 text-left">Day</th>
+            <th class="p-2 text-left">Date</th>
+            <th class="p-2 text-left">Temperature</th>
+            <th class="p-2 text-left">Condition</th>
+            <th class="p-2 text-left">Icon</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (day of forecastData; track day) {
+            <tr class="text-black border-b hover:bg-gray-50">
+              <td class="p-2">{{ getDayName(day.date.toString()) | translate }}</td>
+              <td class="p-2">{{ formatDate(day.date.toString()) }}</td>
+              <td class="p-2">{{ day.temperature }}°C</td>
+              <td class="p-2">{{ day.condition }}</td>
+              <td class="p-2">
+                <img [src]="'http://openweathermap.org/img/wn/' + day.icon + '@2x.png'" 
+                     [alt]="day.condition" 
+                     class="w-10 h-10">
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>  

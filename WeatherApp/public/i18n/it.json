@@ -9,6 +9,12 @@
     "thunderstorm": "temporale",
     "snow": "neve",
     "mist": "nebbia",
-    "moderate rain": "pioggia moderata"
-
+    "moderate rain": "pioggia moderata",
+    "Monday": "lunedì",
+    "Tuesday": "martedì",
+    "Wednesday": "mercoledì",
+    "Thursday": "giovedì",
+    "Friday": "venerdì",
+    "Saturday": "sabato",
+    "Sunday": "domenica"
 }
