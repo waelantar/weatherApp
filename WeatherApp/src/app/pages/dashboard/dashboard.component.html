@@ -1,7 +1,13 @@
 <div className="h-full bg-">
     <div className="container mx-auto h-full" id="home">
       <div className="flex flex-col xl:flex-row items-center justify-between xl:pt-8 xl:pb-24">
-<h1>{{"greeting" | translate }}</h1>
+        <div class="flex w-full justify-center p-5">
+
+          <app-add-city (cityAdded)="addCity($event)"></app-add-city>
+          <!--<input type="text" [(ngModel)]="searchQuery" (input)="filterCities()" placeholder="Search for a city">-->
+          <div class="city-cards">
+          </div>
+        </div>
       </div>
     </div>
 </div>

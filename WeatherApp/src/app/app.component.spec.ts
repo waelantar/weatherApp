@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { AppComponent } from './app.component';
-import { LanguageService } from './services/language.service'; 
+import { LanguageService } from './services/language/language.service'; 
 import { TranslateService } from '@ngx-translate/core';
 
 describe('AppComponent', () => {
