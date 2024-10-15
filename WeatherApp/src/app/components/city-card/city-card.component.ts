@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 import { WeatherData } from '../../models/WeatherData.model';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-city-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,TranslateModule],
   templateUrl: './city-card.component.html',
   styleUrl: './city-card.component.scss',
   encapsulation: ViewEncapsulation.None,
@@ -16,6 +17,8 @@ export class CityCardComponent implements OnInit {
   @Input() city: WeatherData = { city: '', temperature: 0, condition: '', icon: '' };
   weatherIcon: any;
   @Output() cityRemoved = new EventEmitter<WeatherData>();
+  @Output() citySelected = new EventEmitter<any>();
+
   private overlayOpacity: number = 0.1;
    constructor(public sanitizer: DomSanitizer){
 
@@ -41,6 +44,9 @@ export class CityCardComponent implements OnInit {
     } else {
       return this.weatherIcon = this.sanitizer.bypassSecurityTrustHtml(this.weatherIcons.hot);
     }
+  }
+  onCardClick() {
+    this.citySelected.emit(this.city);
   }
   removeCity() {
     this.cityRemoved.emit(this.city);

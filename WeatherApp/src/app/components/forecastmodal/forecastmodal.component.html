@@ -1,0 +1,9 @@
+<div class="modal">
+    <button (click)="close.emit()">Close</button>
+    @for (day of forecastData; track day) {
+    <div>
+      <p>{{day.date}}</p>
+      <p>{{ day.temperature }}°C - {{ day.condition }}</p>
+      <img [src]="'http://openweathermap.org/img/wn/' + day.icon + '@2x.png'" alt="Weather icon">
+    </div>}
+  </div>

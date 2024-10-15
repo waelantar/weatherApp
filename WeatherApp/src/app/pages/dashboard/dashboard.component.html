@@ -8,8 +8,8 @@
         <div class="relative overflow-hidden">
           <div #cardContainer class="flex flex-row w-full justify-start space-x-4 py-8 overflow-x-auto scrollbar-hide" (wheel)="handleScroll($event)">
             @for (city of cities; track city) {
-              <div class="flex-shrink-0">
-                <app-city-card [city]="city" (cityRemoved)="removeCity($event)"></app-city-card>
+              <div class="flex-shrink-0" >
+                <app-city-card [city]="city" (cityRemoved)="removeCity($event)" (citySelected)="handleCitySelection($event)"></app-city-card>
               </div>
             }
           </div>
@@ -30,4 +30,10 @@
       </div>
     </div>
   </div>
+  @if(showModal)
+  {
+    <app-forecastmodal  [forecastData]="selectedCityForecast" (close)="closeModal()"></app-forecastmodal>
+
+  }
+
 </div>

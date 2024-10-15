@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../../enviroments/enviroment';
 import { API_ENDPOINTS } from '../../constants/api-endpoints.constant';
 import { WeatherData } from '../../models/WeatherData.model';
+import { datesData } from '../../models/datesData.model';
 
 @Injectable({
   providedIn: 'root'
@@ -54,24 +55,45 @@ export class WeatherService {
     );
   }
 
-  getForecast(city: string): Observable<WeatherData[]> {
+  getForecast(city: string): Observable<datesData[]> {
     const params = new HttpParams()
       .set('q', city)
       .set('appid', this.apiKey)
       .set('units', 'metric');
-
+  
     return this.http.get<any>(API_ENDPOINTS.FORECAST, { params }).pipe(
       map(response => {
-        return response.list.map((item: any) => ({
-          date: item.dt_txt,
-          temperature: item.main.temp,
-          condition: item.weather[0].description,
-          icon: item.weather[0].icon
-        }));
+        const today = new Date();
+        const endDate = new Date(today);
+        endDate.setDate(today.getDate() + 7); // Set end date to 7 days from today
+  
+        // Create a map to store the first forecast of each day
+        const dailyForecastMap: { [key: string]: any } = {};
+  
+        response.list.forEach((item: any) => {
+          const forecastDate = new Date(item.dt_txt);
+          // Format the date to YYYY-MM-DD for grouping
+          const dateKey = forecastDate.toISOString().split('T')[0];
+  
+          // Only add if the date is within the next 7 days and not already added
+          if (forecastDate >= today && forecastDate < endDate && !dailyForecastMap[dateKey]) {
+            dailyForecastMap[dateKey] = {
+              date: item.dt_txt,
+              temperature: item.main.temp,
+              condition: item.weather[0].description,
+              icon: item.weather[0].icon
+            };
+          }
+        });
+  
+        // Return only the values from the map as an array
+        return Object.values(dailyForecastMap);
       }),
       catchError(this.handleError)
     );
   }
+  
+  
   getAllCities(): Observable<any[]> {  
     return this.citiesSubject.asObservable(); // Return the BehaviorSubject as an Observable
   }

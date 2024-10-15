@@ -5,11 +5,14 @@ import { WeatherService } from '../../services/weather/weather.service';
 import { FormsModule } from '@angular/forms';
 import { AddCityComponent } from "../../components/shared/add-city/add-city.component";
 import { CityCardComponent } from '../../components/city-card/city-card.component';
+import { Observable } from 'rxjs';
+import { ForecastmodalComponent } from "../../components/forecastmodal/forecastmodal.component";
+import { datesData } from '../../models/datesData.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [TranslateModule, FormsModule, AddCityComponent,CityCardComponent],
+  imports: [TranslateModule, FormsModule, AddCityComponent, CityCardComponent, ForecastmodalComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']  // Fix typo here
 })
@@ -17,7 +20,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   cities: WeatherData[] = [];
   filteredCities: WeatherData[] = [];
   searchQuery: string = '';
-  
+  showModal = false;
+  selectedCityForecast: datesData[] = [];
   @ViewChild('cardContainer')
   cardContainer!: ElementRef;
   
@@ -99,5 +103,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       const container = this.cardContainer.nativeElement;
       container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
     }
+  }
+  handleCitySelection(city: any) {
+   
+    this.showModal = true;
+    this.weatherService.getForecast(city.city).subscribe(data => {
+      this.selectedCityForecast=data;
+    console.log(this.selectedCityForecast)});
+  }
+
+ 
+
+  closeModal() {
+    this.showModal = false; // Close the modal
   }
 }
