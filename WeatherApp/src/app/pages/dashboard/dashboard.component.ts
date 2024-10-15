@@ -11,22 +11,26 @@ import { CityCardComponent } from "../../components/city-card/city-card.componen
   standalone: true,
   imports: [TranslateModule, FormsModule, AddCityComponent, CityCardComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrls: ['./dashboard.component.scss']  // Fix typo here
 })
-export class DashboardComponent implements OnInit ,AfterViewInit{
+export class DashboardComponent implements OnInit, AfterViewInit {
   cities: WeatherData[] = [];
   filteredCities: WeatherData[] = [];
   searchQuery: string = '';
+  
   @ViewChild('cardContainer')
   cardContainer!: ElementRef;
+  
   showLeftArrow: boolean = false;
   showRightArrow: boolean = false;
-  constructor(private weatherService: WeatherService,private cdr: ChangeDetectorRef) { }
+
+  constructor(private weatherService: WeatherService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.cities = this.weatherService.getCitiesFromLocalStorage();
     this.filteredCities = [...this.cities];
   }
+
   ngAfterViewInit() {
     // Defer the initial check to the next change detection cycle
     setTimeout(() => this.checkArrows(), 0);
@@ -35,6 +39,14 @@ export class DashboardComponent implements OnInit ,AfterViewInit{
   @HostListener('window:resize')
   onResize() {
     this.checkArrows();
+  }
+
+  handleScroll(event: WheelEvent) {
+    if (this.cardContainer && this.cardContainer.nativeElement) {
+      const container = this.cardContainer.nativeElement;
+      container.scrollBy({ left: event.deltaY, behavior: 'smooth' });
+      setTimeout(() => this.checkArrows(), 0);
+    }
   }
 
   checkArrows() {
@@ -61,6 +73,18 @@ export class DashboardComponent implements OnInit ,AfterViewInit{
     }
   }
 
+  addCity(city: any) {
+    this.weatherService.getCurrentWeather(city).subscribe(data => {
+      this.cities.push(data);
+      this.weatherService.addCityToLocalStorage(data);
+      this.cities = this.weatherService.getCitiesFromLocalStorage();
+      
+      setTimeout(() => {
+        this.checkArrows();
+        this.scrollToEnd();
+      }, 0);
+    });
+  }
 
   removeCity(city: any) {
     this.cities = this.cities.filter(c => c !== city);
@@ -70,23 +94,10 @@ export class DashboardComponent implements OnInit ,AfterViewInit{
     setTimeout(() => this.checkArrows(), 0);
   }
 
- 
-
-addCity(city: any) {
-  this.weatherService.getCurrentWeather(city).subscribe(data => {
-    this.cities.push(data);
-    this.weatherService.addCityToLocalStorage(data);
-    this.cities = this.weatherService.getCitiesFromLocalStorage();
-
-  });    setTimeout(() => {
-      this.checkArrows();
-      this.scrollToEnd();
-    }, 0);
-  }
-
   private scrollToEnd() {
     if (this.cardContainer && this.cardContainer.nativeElement) {
       const container = this.cardContainer.nativeElement;
       container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
     }
-  }}
+  }
+}

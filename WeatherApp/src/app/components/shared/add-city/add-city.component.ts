@@ -29,13 +29,18 @@ export class AddCityComponent implements OnInit{
 
   searchCities() {
     if (this.cityName.trim()) {
-      this.searchResults = this.allCities.filter(city =>
+      // Filter cities that start with the input city name
+      const filteredCities = this.allCities.filter(city =>
         city.name.toLowerCase().startsWith(this.cityName.toLowerCase())
       );
+  
+      // Limit the results to the first 10 cities
+      this.searchResults = filteredCities.slice(0, 10);
     } else {
       this.searchResults = [];
     }
   }
+  
   
 
   addCity(city: string) {
