@@ -1,9 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { WeatherService } from '../../../services/weather/weather.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule } from '@angular/forms';
 import { AddCity } from '../../../constants/add-city.constant';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-add-city',
   standalone: true,
@@ -11,21 +11,57 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './add-city.component.html',
   styleUrl: './add-city.component.scss'
 })
-export class AddCityComponent implements OnInit{
+export class AddCityComponent implements OnInit,OnChanges{
   cityName: string = '';
   searchResults: any[] = [];
   allCities:any[]=[]
   addCitySearch:string=AddCity.searchForCity;
+  citySearch:string="";
+  animatedPlaceholder = '';
   @Output() cityAdded = new EventEmitter<string>();
   searchControl = new FormControl();
 
-  constructor(private weatherService: WeatherService) { }
+  constructor(private weatherService: WeatherService,private translateService:TranslateService) { }
+  ngOnChanges(changes: SimpleChanges) {
+    this.translateService.get(this.addCitySearch).subscribe((translated: string) => {
+      this.citySearch=translated;
+      this.typePlaceholder();
+
+    }); 
+    }
   ngOnInit(): void {
     this.weatherService.getAllCities().subscribe(data => {
       this.allCities = data;
     });
-  }
+    
+    this.translateService.onLangChange.subscribe(() => {
+      this.animatedPlaceholder="";
+      this.citySearch=this.translateService.instant(this.addCitySearch);
 
+      this.typePlaceholder();
+
+    });
+    
+
+  }
+  typePlaceholder() {
+    let index = 0;
+    const speed = 100; // Typing speed in milliseconds
+    
+    console.log(this.citySearch);
+    const type = () => {
+
+      if (index < this.citySearch.length) {
+        
+        this.animatedPlaceholder += this.citySearch.charAt(index);
+        index++;
+        setTimeout(type, speed);
+      }
+      
+    };
+
+    type();
+  }
 
   searchCities() {
     if (this.cityName.trim()) {

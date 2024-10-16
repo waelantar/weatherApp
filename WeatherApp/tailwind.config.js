@@ -37,9 +37,15 @@ module.exports = {
           '0%, 100%': { color: '#3b82f6', textShadow: '0px 0px 20px rgba(59, 130, 246, 0.5)' }, // Blue color for clear sky
           '50%': { color: '#facc15', textShadow: '0px 0px 30px rgba(234, 179, 8, 0.8)' }, // Yellow for sunlight
         },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-5px) translateY(-5px)' },
+          '75%': { transform: 'translateX(5px) translateY(5px)' },
+        },
       },
       animation: {
         weatheria: 'weatheria 3s infinite alternate',
+        shake: 'shake 0.5s ease-in-out',
       },
     },
   },
