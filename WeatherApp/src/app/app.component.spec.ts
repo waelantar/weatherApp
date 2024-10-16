@@ -47,7 +47,7 @@ describe('AppComponent', () => {
   });
 
   it('should navigate to /dashboard if cities are present in localStorage', () => {
-    spyOn(localStorage, 'getItem').and.returnValue('someCities');
+    spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify(['someCity']));
     component.ngOnInit();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
