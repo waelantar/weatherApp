@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavComponent } from './nav.component';
 import { LanguageService } from '../../../services/language/language.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('NavComponent', () => {
   let component: NavComponent;
@@ -12,7 +13,8 @@ describe('NavComponent', () => {
     mockLanguageService.getCurrentLanguage.and.returnValue('en');
 
     await TestBed.configureTestingModule({
-      imports: [NavComponent], // Add the standalone component to the imports array
+      imports: [NavComponent,        NoopAnimationsModule
+      ], 
       providers: [{ provide: LanguageService, useValue: mockLanguageService }],
     }).compileComponents();
 
