@@ -27,22 +27,23 @@ export class AppComponent implements OnInit, OnDestroy {
         this.translateService.use(userLang);
       }
     );
-    // Check if window and localStorage are available
     if (typeof window !== 'undefined' && localStorage) {
-      // Access localStorage safely
-      
-      if (localStorage.getItem(this.citiesKey)) {
-        // If cities are present, navigate to the dashboard
-        this.router.navigate(['/dashboard']);
+      const cities = localStorage.getItem(this.citiesKey);
+    
+      if (cities) {
+        const citiesArray = JSON.parse(cities);
+    
+        if (Array.isArray(citiesArray) && citiesArray.length > 0) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/']);
+        }
       } else {
-        // If no cities found, navigate to the landing page
         this.router.navigate(['/']);
       }
     } else {
-      // If localStorage is not available, navigate to the landing page
       this.router.navigate(['/']);
-    }
-  }
+    }}
 
   ngOnDestroy() {
     if (this.languageSubscription) {
