@@ -23,26 +23,25 @@ export class AddCityComponent implements OnInit,OnChanges{
 
   constructor(private weatherService: WeatherService,private translateService:TranslateService) { }
   ngOnChanges(changes: SimpleChanges) {
-    this.translateService.get(this.addCitySearch).subscribe((translated: string) => {
-      this.citySearch=translated;
-      this.typePlaceholder();
-
-    }); 
+    if (changes['citySearch']) {
+      this.translateService.get(this.addCitySearch).subscribe((translated: string) => {
+        this.citySearch = translated;
+        this.typePlaceholder();
+      });
     }
+  }
+  
   ngOnInit(): void {
     this.weatherService.getAllCities().subscribe(data => {
       this.allCities = data;
     });
-    
+  
+   
     this.translateService.onLangChange.subscribe(() => {
-      this.animatedPlaceholder="";
-      this.citySearch=this.translateService.instant(this.addCitySearch);
-
+      this.animatedPlaceholder = "";
+      this.citySearch = this.translateService.instant(this.addCitySearch);
       this.typePlaceholder();
-
     });
-    
-
   }
   typePlaceholder() {
     let index = 0;

@@ -41,8 +41,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.css",
-              "node_module/ngx-spinner/animations/ball-scale-ripple.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.css"
 
             ],
             "scripts": [
