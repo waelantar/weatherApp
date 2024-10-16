@@ -132,16 +132,21 @@ export class WeatherService {
     }
   }
 
-  private handleError(error: HttpErrorResponse, context: string): Observable<never> {
-    let errorMessage = `${context}: `;
-
-    if (error.error instanceof ErrorEvent) {
-      errorMessage += `An error occurred: ${error.error.message}`;
-    } 
-
-    console.error(errorMessage);
-
-    
-    return throwError(() => new Error('Something went wrong; please try again later.'));
+  private handleError(error: any, userFriendlyMessage: string): Observable<never> {
+    let errorMessage: string;
+  
+    if (error.status === 404) {
+      // Handling the 404 error specifically
+      errorMessage = `City not found. Please check the city name and try again.`;
+    } else if (error.status === 0) {
+      // Handling network errors
+      errorMessage = `Network error: Unable to reach the server. Please check your internet connection.`;
+    } else {
+      // Handling other errors
+      errorMessage = userFriendlyMessage || `Something went wrong; please try again later.`;
+    }
+  
+    console.error(errorMessage, error);
+    return throwError(() => new Error(errorMessage));
   }
 }
