@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, finalize } from 'rxjs/operators';
 import { environment } from '../../../enviroments/enviroment';
 import { API_ENDPOINTS } from '../../constants/api-endpoints.constant';
 import { WeatherData } from '../../models/WeatherData.model';
 import { datesData } from '../../models/datesData.model';
+import { LoadingService } from '../loadingIndicator/loading.service'; 
 
 @Injectable({
   providedIn: 'root'
@@ -19,16 +20,21 @@ export class WeatherService {
 
   private citiesSubject = new BehaviorSubject<any[]>([]);
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private loadingService: LoadingService 
+  ) {
     this.initializeCities();
   }
 
   private initializeCities(): void {
+    this.loadingService.loadingOn(); 
     const storedCities = this.getCitiesFromLocalStorage();
     const storedCityNames = new Set(storedCities.map(city => city.city.toLowerCase()));
 
     this.http.get<any[]>('assets/cities500.json').pipe(
-      catchError(error => this.handleError(error, 'Failed to load cities'))
+      catchError(error => this.handleError(error, 'Failed to load cities')),
+      finalize(() => this.loadingService.loadingOff()) // Stop loading
     ).subscribe({
       next: (cities) => {
         this.allCities = cities.filter(city => !storedCityNames.has(city.name.toLowerCase()));
@@ -37,13 +43,13 @@ export class WeatherService {
       },
       error: (error) => {
         console.error('Error initializing cities:', error);
-        // You might want to emit an empty array or show an error message to the user
         this.citiesSubject.next([]);
       }
     });
   }
 
   getCurrentWeather(city: string): Observable<WeatherData> {
+    this.loadingService.loadingOn(); 
     const params = new HttpParams()
       .set('q', city)
       .set('appid', this.apiKey)
@@ -56,11 +62,13 @@ export class WeatherService {
         condition: response.weather[0].description,
         icon: response.weather[0].icon
       })),
-      catchError(error => this.handleError(error, `Failed to get weather for ${city}`))
+      catchError(error => this.handleError(error, `Failed to get weather for ${city}`)),
+      finalize(() => this.loadingService.loadingOff()) 
     );
   }
 
   getForecast(city: string): Observable<datesData[]> {
+    this.loadingService.loadingOn(); 
     const params = new HttpParams()
       .set('q', city)
       .set('appid', this.apiKey)
@@ -70,9 +78,8 @@ export class WeatherService {
       map(response => {
         const today = new Date();
         const endDate = new Date(today);
-        endDate.setDate(today.getDate() + 7); // Set end date to 7 days from today
+        endDate.setDate(today.getDate() + 7);
   
-        // Create a map to store the first forecast of each day
         const dailyForecastMap: { [key: string]: any } = {};
   
         response.list.forEach((item: any) => {
@@ -89,19 +96,16 @@ export class WeatherService {
           }
         });
   
-        // Return only the values from the map as an array
         return Object.values(dailyForecastMap);
       }),
-      catchError(error => this.handleError(error, `Failed to get forecast for ${city}`))
+      catchError(error => this.handleError(error, `Failed to get forecast for ${city}`)),
+      finalize(() => this.loadingService.loadingOff()) // Stop loading
     );
   }
-  
   
   getAllCities(): Observable<any[]> {  
     return this.citiesSubject.asObservable(); 
   }
-
- 
 
   addCityToLocalStorage(city: WeatherData): void {
     if (typeof localStorage !== 'undefined') {
@@ -136,13 +140,10 @@ export class WeatherService {
     let errorMessage: string;
   
     if (error.status === 404) {
-      // Handling the 404 error specifically
       errorMessage = `City not found. Please check the city name and try again.`;
     } else if (error.status === 0) {
-      // Handling network errors
       errorMessage = `Network error: Unable to reach the server. Please check your internet connection.`;
     } else {
-      // Handling other errors
       errorMessage = userFriendlyMessage || `Something went wrong; please try again later.`;
     }
   
