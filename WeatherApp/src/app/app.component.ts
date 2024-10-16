@@ -15,7 +15,8 @@ export class AppComponent implements OnInit, OnDestroy {
   currentLanguage: string = 'en';
   private languageSubscription: Subscription | undefined;
 
-  constructor(private translateService:TranslateService,private languageService: LanguageService) {}
+  constructor(private translateService:TranslateService,private languageService: LanguageService,private router:Router) {}
+  private citiesKey = 'weatherAppCities';
 
   ngOnInit() {
     this.languageSubscription = this.languageService.currentLanguage$.subscribe(
@@ -26,23 +27,11 @@ export class AppComponent implements OnInit, OnDestroy {
         this.translateService.use(userLang);
       }
     );
-  }
-
-  ngOnDestroy() {
-    if (this.languageSubscription) {
-      this.languageSubscription.unsubscribe();
-    }
-  }
-
-
-  title = 'WeatherApp';
-  /* ngOnInit(): void {
     // Check if window and localStorage are available
     if (typeof window !== 'undefined' && localStorage) {
       // Access localStorage safely
-      const storedCities = localStorage.getItem('cities');
       
-      if (storedCities && JSON.parse(storedCities).length > 0) {
+      if (localStorage.getItem(this.citiesKey)) {
         // If cities are present, navigate to the dashboard
         this.router.navigate(['/dashboard']);
       } else {
@@ -53,5 +42,15 @@ export class AppComponent implements OnInit, OnDestroy {
       // If localStorage is not available, navigate to the landing page
       this.router.navigate(['/']);
     }
-  } */
+  }
+
+  ngOnDestroy() {
+    if (this.languageSubscription) {
+      this.languageSubscription.unsubscribe();
+    }
+  }
+
+
+  title = 'WeatherApp';
+ 
 }
