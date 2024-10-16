@@ -77,7 +77,7 @@ The project follows a feature-based structure, with each major feature having it
 - `src/app/components`: Reusable UI components
 - `src/app/services`: API and data management services
 - `src/app/models`: TypeScript interfaces and models
-- `src/app/utils`: Utility functions and helpers
+- `src/app/pages`: Main pages
 
 ## Version Control
 
