@@ -4,10 +4,12 @@ import { NavComponent } from './components/shared/nav/nav.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { LanguageService } from './services/language/language.service';
+import { LoadingIndicatorComponent } from "./components/shared/loading-indicator/loading-indicator.component";
+import { LoadingService } from './services/loadingIndicator/loading.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,NavComponent,TranslateModule],
+  imports: [RouterOutlet, NavComponent, TranslateModule, LoadingIndicatorComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -15,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   currentLanguage: string = 'en';
   private languageSubscription: Subscription | undefined;
 
-  constructor(private translateService:TranslateService,private languageService: LanguageService,private router:Router) {}
+  constructor(private translateService:TranslateService,private languageService: LanguageService,private router:Router,private loadingService:LoadingService) {}
   private citiesKey = 'weatherAppCities';
 
   ngOnInit() {
@@ -50,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.languageSubscription.unsubscribe();
     }
   }
-
+ 
 
   title = 'WeatherApp';
  
