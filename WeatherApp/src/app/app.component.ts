@@ -6,10 +6,11 @@ import { Subscription } from 'rxjs';
 import { LanguageService } from './services/language/language.service';
 import { LoadingIndicatorComponent } from "./components/shared/loading-indicator/loading-indicator.component";
 import { LoadingService } from './services/loadingIndicator/loading.service';
+import { NgOptimizedImage } from '@angular/common';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavComponent, TranslateModule, LoadingIndicatorComponent],
+  imports: [RouterOutlet, NavComponent, TranslateModule, LoadingIndicatorComponent , NgOptimizedImage],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
