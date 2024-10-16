@@ -1,1 +1,17 @@
-<p>landing-page works!</p>
+<div class="h-screen">
+    <div class="container h-full mx-auto p-2">
+        <div class="flex flex-col items-center justify-between space-y-8 bg-gradient-to-bl from-black/75 via-[#070450]/75 to-[#44428e]/75 rounded-3xl p-8 h-full">
+            <h1 class="text-4xl font-bold text-white text-center" i18n>
+                {{title | translate}}
+            </h1>
+
+            <div class="flex w-full justify-center ">
+                <app-add-city (cityAdded)="addCity($event)"></app-add-city>
+            </div>
+
+            <div class="md:w-[50%] w-full">
+                <img src="/assets/clear-cards.png" alt="Weather illustration" class="w-full h-full object-cover rounded-2xl">
+            </div>
+        </div>
+    </div>
+</div>

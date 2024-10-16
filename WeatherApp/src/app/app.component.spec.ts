@@ -1,53 +1,68 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { AppComponent } from './app.component';
-import { LanguageService } from './services/language/language.service'; 
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { of, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from './services/language/language.service';
+import { AppComponent } from './app.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NavComponent } from './components/shared/nav/nav.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let languageServiceSpy: jasmine.SpyObj<LanguageService>;
-  let translateServiceSpy: jasmine.SpyObj<TranslateService>;
+  let mockTranslateService: jasmine.SpyObj<TranslateService>;
+  let mockLanguageService: jasmine.SpyObj<LanguageService>;
+  let mockRouter: jasmine.SpyObj<Router>;
 
-  beforeEach(() => {
-    const languageServiceMock = jasmine.createSpyObj('LanguageService', ['currentLanguage$']);
-    const translateServiceMock = jasmine.createSpyObj('TranslateService', ['setDefaultLang', 'use']);
+  beforeEach(async () => {
+    // Creating spies for dependencies
+    mockTranslateService = jasmine.createSpyObj('TranslateService', ['setDefaultLang', 'use']);
+    mockLanguageService = jasmine.createSpyObj('LanguageService', ['currentLanguage$']);
+    mockRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-    TestBed.configureTestingModule({
-      imports: [AppComponent], // Import the standalone component here
+    // Mock the language service observable
+    mockLanguageService.currentLanguage$ = of('en');
+
+    await TestBed.configureTestingModule({
+      imports: [RouterTestingModule.withRoutes([]), NavComponent,AppComponent],
       providers: [
-        { provide: LanguageService, useValue: languageServiceMock },
-        { provide: TranslateService, useValue: translateServiceMock }
+        { provide: TranslateService, useValue: mockTranslateService },
+        { provide: LanguageService, useValue: mockLanguageService },
+        { provide: Router, useValue: mockRouter }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-    languageServiceSpy = TestBed.inject(LanguageService) as jasmine.SpyObj<LanguageService>;
-    translateServiceSpy = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
   });
 
-  it('should update currentLanguage and call TranslateService when ngOnInit is called', () => {
-    const mockLanguage = 'it';
-    languageServiceSpy.currentLanguage$ = of(mockLanguage);
+  it('should create the app component', () => {
+    expect(component).toBeTruthy();
+  });
 
+  it('should set the default language on init', () => {
     component.ngOnInit();
-
-    expect(component.currentLanguage).toBe(mockLanguage);
-    expect(translateServiceSpy.setDefaultLang).toHaveBeenCalledWith(mockLanguage);
-    expect(translateServiceSpy.use).toHaveBeenCalledWith(mockLanguage);
+    expect(mockTranslateService.setDefaultLang).toHaveBeenCalledWith('en');
+    expect(mockTranslateService.use).toHaveBeenCalledWith('en');
   });
 
-  it('should subscribe to currentLanguage$', () => {
-    const mockLanguage = 'en';
-    languageServiceSpy.currentLanguage$ = of(mockLanguage);
-    spyOn(languageServiceSpy.currentLanguage$, 'subscribe').and.callThrough();
-
+  it('should navigate to /dashboard if cities are present in localStorage', () => {
+    spyOn(localStorage, 'getItem').and.returnValue('someCities');
     component.ngOnInit();
-
-    expect(languageServiceSpy.currentLanguage$.subscribe).toHaveBeenCalled();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 
+  it('should navigate to / if no cities are found in localStorage', () => {
+    spyOn(localStorage, 'getItem').and.returnValue(null);
+    component.ngOnInit();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+  });
 
+  it('should unsubscribe from languageSubscription on destroy', () => {
+    const subscriptionSpy = jasmine.createSpyObj<Subscription>('Subscription', ['unsubscribe']);
+    component['languageSubscription'] = subscriptionSpy;
+
+    component.ngOnDestroy();
+    expect(subscriptionSpy.unsubscribe).toHaveBeenCalled();
+  });
 });
