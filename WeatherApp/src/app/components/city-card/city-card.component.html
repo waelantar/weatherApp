@@ -1,8 +1,11 @@
 <div
   class="cursor-pointer relative bg-[#101139] text-white rounded-3xl w-full max-w-xs sm:max-w-sm lg:max-w-md xl:max-w-lg h-auto sm:h-96 md:h-auto overflow-hidden group"
   [ngStyle]="{'--overlay-opacity': getRandomOpacity()}"
-  (click)="onCardClick()"
+  
 >
+<div (click)="onCardClick()">
+
+
   <!-- Glass-like overlay -->
   <div
     class="absolute inset-0 bg-white opacity-10"
@@ -26,7 +29,7 @@
       <i class="fa fa-map-marker" aria-hidden="true"></i> {{ city.city }}
     </h2>
   </div>
-
+</div>
   <!-- Close button (hidden by default, shown on hover) -->
   <button
     (click)="removeCity()"
