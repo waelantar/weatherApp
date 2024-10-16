@@ -42,10 +42,15 @@ module.exports = {
           '25%': { transform: 'translateX(-5px) translateY(-5px)' },
           '75%': { transform: 'translateX(5px) translateY(5px)' },
         },
+        'fade-slide-up': {
+          '0%': { opacity: 0, transform: 'translateY(20px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
       },
       animation: {
         weatheria: 'weatheria 3s infinite alternate',
         shake: 'shake 0.5s ease-in-out',
+        'fade-slide-up': 'fade-slide-up 0.8s ease-out',
       },
     },
   },
