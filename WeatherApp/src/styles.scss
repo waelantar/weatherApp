@@ -4,7 +4,8 @@
 @tailwind utilities;
 @layer base {
     body {
-      @apply font-primary bg-primary text-white;
+      @apply font-primary bg-primary text-white bg-[url('/assets/rain-png-45876.png')]  bg-cover bg-center;
+      
     }
     .h1 {
       @apply text-[48px] xl:text-[80px] leading-[1.1] font-semibold;
@@ -23,6 +24,7 @@
     }
   }
   @layer utilities {
+    
     .scrollbar-hide::-webkit-scrollbar {
       display: none;
     }

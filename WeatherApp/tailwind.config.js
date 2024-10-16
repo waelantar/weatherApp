@@ -28,6 +28,9 @@ module.exports = {
           hover: "#E8E8E8",    
         },
       },
+      backgroundImage: {
+        'custom-bg': "url('/WeatherApp/public/assets/2_3.jpg')",
+      },
       
     },
   },
