@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { WeatherData } from '../../models/WeatherData.model';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-city-card',
   standalone: true,
-  imports: [CommonModule,TranslateModule],
+  imports: [CommonModule,TranslateModule, NgOptimizedImage],
   templateUrl: './city-card.component.html',
   styleUrl: './city-card.component.scss',
   encapsulation: ViewEncapsulation.None,

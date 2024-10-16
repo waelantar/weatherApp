@@ -47,7 +47,6 @@ export class AddCityComponent implements OnInit,OnChanges{
     let index = 0;
     const speed = 100; // Typing speed in milliseconds
     
-    console.log(this.citySearch);
     const type = () => {
 
       if (index < this.citySearch.length) {

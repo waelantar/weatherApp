@@ -5,10 +5,11 @@ import { WeatherData } from '../../models/WeatherData.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { landingPage } from '../../constants/landing-page.constant';
 import { Router } from '@angular/router';
+import { NgOptimizedImage } from '@angular/common';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [AddCityComponent,TranslateModule],
+  imports: [AddCityComponent,TranslateModule, NgOptimizedImage],
   templateUrl: './landing-page.component.html',
   styleUrl: './landing-page.component.scss'
 })

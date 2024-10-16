@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { WeatherData } from '../../models/WeatherData.model';
 import { datesData } from '../../models/datesData.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-forecastmodal',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslateModule, NgOptimizedImage],
   templateUrl: './forecastmodal.component.html',
   styleUrl: './forecastmodal.component.scss'
 })
