@@ -24,7 +24,7 @@
               <td class="p-2">{{ getDayName(day.date.toString()) | translate }}</td>
               <td class="p-2">{{ formatDate(day.date.toString()) }}</td>
               <td class="p-2">{{ day.temperature }}°C</td>
-              <td class="p-2">{{ day.condition }}</td>
+              <td class="p-2">{{ day.condition | translate }}</td>
               <td class="p-2">
                 <img [src]="'http://openweathermap.org/img/wn/' + day.icon + '@2x.png'" 
                      [alt]="day.condition" 
